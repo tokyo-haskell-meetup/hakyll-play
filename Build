@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e -o pipefail
+
+base=$(cd "$(dirname "$0")" && pwd -P)
+
+cd $base
+[[ $1 == -C ]] && { shift; git clean -fdX; }
+[[ -x .stack-work/install/*/*/*/bin/site ]] || stack build
+[[ -d _site ]] || { stack exec -- site rebuild; }
+stack exec -- site "$@"
